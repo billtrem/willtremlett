@@ -17,14 +17,29 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0"
-).split(",")
+# -------------------------------------------------------------------
+# ALLOWED_HOSTS — Automatic Railway detection
+# -------------------------------------------------------------------
+# Default safe values for local development
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+]
 
-# Required for Railway HTTPS proxy
+# Allow all Railway app domains safely
+ALLOWED_HOSTS.append(".up.railway.app")
+
+# Allow explicitly provided hosts via environment
+extra_hosts = os.getenv("ALLOWED_HOSTS", "")
+if extra_hosts:
+    ALLOWED_HOSTS.extend(extra_hosts.split(","))
+
+# -------------------------------
+# PROXY / HTTPS (Railway)
+# -------------------------------
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Required for POST on Railway
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
 ]
@@ -53,7 +68,7 @@ INSTALLED_APPS = [
 # -------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Required for static files on Railway
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # static files on Railway
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,7 +136,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "portfolio" / "static"]
 
-# If Railway provides static URL, ensure trailing slash
+# Railway static URL override
 railway_static = os.getenv("RAILWAY_STATIC_URL")
 if railway_static:
     if not railway_static.endswith("/"):
