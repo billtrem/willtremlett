@@ -5,13 +5,15 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env
+# Load environment variables from .env (local only)
 load_dotenv(BASE_DIR / ".env")
 
+# -------------------------------
 # SECURITY
+# -------------------------------
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
-    raise Exception("SECRET_KEY is missing from .env")
+    raise Exception("SECRET_KEY is missing from .env or Railway variables")
 
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
@@ -19,11 +21,17 @@ ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS", "localhost,127.0.0.1,0.0.0.0"
 ).split(",")
 
-# Allow Railway internal proxy forwarding
+# Required for Railway HTTPS proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Required to make POST requests work on Railway
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.up.railway.app",
+]
 
-# Apps
+# -------------------------------
+# APPS
+# -------------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,11 +48,12 @@ INSTALLED_APPS = [
     'portfolio',
 ]
 
-
-# Middleware
+# -------------------------------
+# MIDDLEWARE
+# -------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Required for static files on Railway
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,15 +62,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'willtremlett.urls'
 
-
-# Templates
+# -------------------------------
+# TEMPLATES
+# -------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # app-level templates
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,23 +83,22 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'willtremlett.wsgi.application'
 
-
-# ---------- DATABASE ----------
-# Local = SQLite
-# Railway = Postgres (DATABASE_URL)
+# -------------------------------
+# DATABASE (SQLite local → Postgres on Railway)
+# -------------------------------
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=False
+        ssl_require=True if os.getenv("DATABASE_URL") else False,
     )
 }
 
-
-# ---------- PASSWORDS ----------
+# -------------------------------
+# PASSWORD VALIDATION
+# -------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -98,22 +106,22 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# ---------- INTERNATIONAL ----------
+# -------------------------------
+# INTERNATIONAL
+# -------------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
-# ---------- STATIC FILES ----------
+# -------------------------------
+# STATIC FILES
+# -------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [
-    BASE_DIR / "portfolio" / "static",
-]
+STATICFILES_DIRS = [BASE_DIR / "portfolio" / "static"]
 
-# Railway static URL override
+# Override if Railway provides STATIC URL
 if "RAILWAY_STATIC_URL" in os.environ:
     STATIC_URL = os.environ["RAILWAY_STATIC_URL"]
 
@@ -126,8 +134,9 @@ STORAGES = {
     },
 }
 
-
-# ---------- CLOUDINARY ----------
+# -------------------------------
+# CLOUDINARY
+# -------------------------------
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
     "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
