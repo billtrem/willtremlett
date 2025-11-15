@@ -24,7 +24,7 @@ ALLOWED_HOSTS = os.getenv(
 # Required for Railway HTTPS proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Required to make POST requests work on Railway
+# Required for POST on Railway
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
 ]
@@ -121,9 +121,12 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "portfolio" / "static"]
 
-# Override if Railway provides STATIC URL
-if "RAILWAY_STATIC_URL" in os.environ:
-    STATIC_URL = os.environ["RAILWAY_STATIC_URL"]
+# If Railway provides static URL, ensure trailing slash
+railway_static = os.getenv("RAILWAY_STATIC_URL")
+if railway_static:
+    if not railway_static.endswith("/"):
+        railway_static += "/"
+    STATIC_URL = railway_static
 
 STORAGES = {
     "default": {
