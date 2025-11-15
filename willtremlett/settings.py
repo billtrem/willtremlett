@@ -18,22 +18,21 @@ if not SECRET_KEY:
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 # -------------------------------------------------------------------
-# ALLOWED_HOSTS — Automatic Railway detection
+# ALLOWED_HOSTS — Railway + Production Domain
 # -------------------------------------------------------------------
-# Default safe values for local development
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "0.0.0.0",
+    "*.up.railway.app",        # allow any Railway deployment
+    "willtremlett.com",
+    "www.willtremlett.com",
 ]
 
-# Allow all Railway app domains safely
-ALLOWED_HOSTS.append(".up.railway.app")
-
-# Allow explicitly provided hosts via environment
+# Allow extra hosts via environment
 extra_hosts = os.getenv("ALLOWED_HOSTS", "")
 if extra_hosts:
-    ALLOWED_HOSTS.extend(extra_hosts.split(","))
+    ALLOWED_HOSTS.extend([h.strip() for h in extra_hosts.split(",") if h.strip()])
 
 # -------------------------------
 # PROXY / HTTPS (Railway)
@@ -42,6 +41,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
+    "https://willtremlett.com",
+    "https://www.willtremlett.com",
 ]
 
 # -------------------------------
@@ -68,7 +69,7 @@ INSTALLED_APPS = [
 # -------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # static files on Railway
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -101,7 +102,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'willtremlett.wsgi.application'
 
 # -------------------------------
-# DATABASE (SQLite local → Postgres on Railway)
+# DATABASE
 # -------------------------------
 DATABASES = {
     "default": dj_database_url.config(
@@ -136,7 +137,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "portfolio" / "static"]
 
-# Railway static URL override
+# Railway static URL override (if provided)
 railway_static = os.getenv("RAILWAY_STATIC_URL")
 if railway_static:
     if not railway_static.endswith("/"):
