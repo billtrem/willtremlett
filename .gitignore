@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Environment variables
+.env
+
+# Django
+db.sqlite3
+staticfiles/
+
+# VSCode
+.vscode/
+
+# Byte-compiled
+*.pyo
+*.pyd
+
+# Testing
+.coverage
+htmlcov/
