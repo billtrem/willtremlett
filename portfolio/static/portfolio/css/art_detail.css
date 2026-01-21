@@ -1,0 +1,96 @@
+/* ART DETAIL — gallery / catalogue feel (hard edges, slower pacing) */
+
+.art-detail{
+  width: 100%;
+  padding-top: 10px;
+}
+
+.art-detail-top{
+  margin-bottom: 18px;
+}
+
+.art-back{
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.art-back:hover{ opacity: 1; }
+
+.art-detail-head{
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  margin-bottom: 18px;
+}
+
+.art-detail-title{
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.art-detail-meta{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0,0,0,0.62);
+  font-size: 13px;
+}
+
+.art-detail-meta .dot{
+  opacity: 0.6;
+}
+
+/* Main artwork image */
+.art-figure{
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+  overflow: hidden;
+  border-radius: 0; /* hard edge */
+}
+
+.art-figure img{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0;
+}
+
+.art-figure-fallback{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(180deg, #f3f3f3, #eaeaea);
+}
+
+/* Body copy */
+.art-body{
+  margin-top: 22px;
+  max-width: 78ch; /* editorial reading width */
+}
+
+.art-body-title{
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.70);
+}
+
+.art-body-text{
+  line-height: 1.7;
+  color: rgba(0,0,0,0.82);
+  font-size: 14px;
+}
+
+/* Linkout */
+.art-linkout{
+  margin-top: 18px;
+}
+
+.art-link{
+  text-decoration: underline;
+  color: rgba(0,0,0,0.82);
+}

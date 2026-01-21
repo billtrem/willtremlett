@@ -38,6 +38,7 @@ if extra_hosts:
 # PROXY / HTTPS (Railway)
 # -------------------------------
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",

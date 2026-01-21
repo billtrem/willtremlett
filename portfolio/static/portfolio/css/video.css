@@ -1,0 +1,123 @@
+/* VIDEO LANDING PAGE */
+
+.page{
+  width: 100%;
+}
+
+.page-head{
+  padding: 8px 0 16px 0;
+}
+
+.page-title{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* GRID */
+.tile-grid{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+}
+
+/* TILE */
+.tile{
+  grid-column: span 12;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+  overflow: hidden;
+  border-radius: 0; /* HARD EDGE */
+}
+
+/* MEDIA */
+.tile-media{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #f2f2f2;
+}
+
+.tile-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+/* Fallback image */
+.tile-fallback{
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #f3f3f3, #eaeaea);
+}
+
+/* Overlay strip */
+.tile-overlay{
+  padding: 12px;
+  border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+.tile-title{
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.tile-meta{
+  font-size: 12px;
+  color: rgba(0,0,0,0.62);
+}
+
+/* Play badge */
+.tile-play{
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.35);
+}
+
+.tile-play-icon{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-35%, -50%);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 10px solid rgba(255,255,255,0.9);
+}
+
+/* Hover */
+.tile:hover{
+  border-color: rgba(0,0,0,0.30);
+}
+
+.tile:hover .tile-media img{
+  transform: scale(1.01);
+  transition: transform 180ms ease;
+}
+
+.empty{
+  margin: 8px 0 0 0;
+  color: rgba(0,0,0,0.62);
+}
+
+/* RESPONSIVE columns */
+@media (min-width: 760px){
+  .tile{ grid-column: span 6; }
+}
+
+@media (min-width: 1100px){
+  .tile{ grid-column: span 4; }
+}
+
+@media (min-width: 1400px){
+  .tile{ grid-column: span 3; }
+}

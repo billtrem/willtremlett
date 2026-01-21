@@ -1,0 +1,50 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+
+{% block title %}{{ project.title }} — Will Tremlett{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'portfolio/css/detail.css' %}">{% endblock %}
+
+{% block content %}
+  <section class="detail">
+
+    <div class="detail-top">
+      {% if project.category == 'films' %}
+        <a class="back" href="{% url 'films' %}">← Back to Films</a>
+      {% elif project.category == 'video' %}
+        <a class="back" href="{% url 'video' %}">← Back to Video</a>
+      {% else %}
+        <a class="back" href="{% url 'art' %}">← Back to Art</a>
+      {% endif %}
+    </div>
+
+    <header class="detail-head">
+      <h1 class="detail-title">{{ project.title }}</h1>
+      <p class="detail-meta">
+        {{ project.role }}{% if project.content_length %} · {{ project.content_length }}{% endif %}
+      </p>
+    </header>
+
+    {% with src=project.get_embed_src %}
+      {% if src %}
+        <div class="player">
+          <iframe
+            src="{{ src }}"
+            title="{{ project.title }}"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"></iframe>
+        </div>
+      {% elif project.video_embed_url %}
+        <p><a class="detail-link" href="{{ project.video_embed_url }}" target="_blank" rel="noopener">Watch externally</a></p>
+      {% endif %}
+    {% endwith %}
+
+    {% if project.description %}
+      <div class="detail-desc">
+        {{ project.description|linebreaksbr }}
+      </div>
+    {% endif %}
+
+  </section>
+{% endblock %}
