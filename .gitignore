@@ -1,24 +1,57 @@
+# --------------------
 # Python
+# --------------------
 __pycache__/
-*.pyc
-
-# Virtual environment
-venv/
-
-# Environment variables
-.env
-
-# Django
-db.sqlite3
-staticfiles/
-
-# VSCode
-.vscode/
-
-# Byte-compiled
+*.py[cod]
 *.pyo
 *.pyd
 
-# Testing
+# --------------------
+# Virtual environment
+# --------------------
+venv/
+.venv/
+
+# --------------------
+# Environment variables / secrets
+# --------------------
+.env
+.env.*
+!.env.example
+
+# --------------------
+# Django
+# --------------------
+db.sqlite3
+db.sqlite3-journal
+*.log
+media/
+staticfiles/
+
+# --------------------
+# OS junk
+# --------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --------------------
+# Editors / IDEs
+# --------------------
+.vscode/
+.idea/
+
+# --------------------
+# Testing / tooling
+# --------------------
 .coverage
+coverage.xml
 htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --------------------
+# Node (if you ever add it)
+# --------------------
+node_modules/
